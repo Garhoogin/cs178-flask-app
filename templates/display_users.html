@@ -11,17 +11,15 @@
         <table class="table table-bordered table-striped mt-3">
             <thead class="thead-dark"> <!-- creates a dark background for the table header -->
                 <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Favorite Genre</th>
+                    <th>ID</th>
+                    <th>Username</th>
                 </tr>
             </thead>
             <tbody> <!-- table body -- loop through all of the users -->
                 {% for user in users %}
                 <tr>
-                    <td>{{ user[0] }}</td>
-                    <td>{{ user[1] }}</td>
-                    <td>{{ user[2] }}</td>
+                    <td>{{ user['ID'] }}</td>
+                    <td>{{ user['Name'] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
