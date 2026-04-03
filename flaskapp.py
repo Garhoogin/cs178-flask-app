@@ -57,7 +57,11 @@ def delete_user():
 def display_users():
     # hard code a value to the users_list;
     # note that this could have been a result from an SQL query :) 
-    users_list = execute_query('SELECT * FROM CREATORS;')
+    users_list = execute_query("""
+        SELECT CREATORS.ID AS ID, CREATORS.Name AS Name, COUNT(*) AS Count
+        FROM   CREATORS, HACK_AUTHOR
+        WHERE  CREATORS.ID=HACK_AUTHOR.UserID GROUP BY CREATORS.ID;
+    """)
     return render_template('display_users.html', users = users_list)
 
 

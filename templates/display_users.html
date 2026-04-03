@@ -13,6 +13,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Username</th>
+                    <th>Hack Credits</th>
                 </tr>
             </thead>
             <tbody> <!-- table body -- loop through all of the users -->
@@ -20,6 +21,7 @@
                 <tr>
                     <td>{{ user['ID'] }}</td>
                     <td>{{ user['Name'] }}</td>
+                    <td>{{ user['Count'] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
