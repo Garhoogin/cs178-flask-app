@@ -65,17 +65,17 @@ def display_users():
 
 @app.route('/user/<userid>')
 def display_user(userid):
-	# Query the database
-	user_row = execute_query("""
-		SELECT CREATORS.Name AS Name
-		WHERE  CREATORS.ID=%d
-	""" % userid)
-
-	# We'll check for errors
-	if len(user_row) > 0:
+	try:
+		# Query the database
+		user_row = execute_query("""
+			SELECT CREATORS.Name AS Name
+			WHERE  CREATORS.ID=%d
+		""" % int(userid))
+		
 		username = user_row[0]['Name']
 		return render_template('display_user.html', username=username, hacks=[])
-	else:
+	except:
+		# Error display (db error, no user, bad user ID)
 		return render_template('display_user_error.html')
 
 
