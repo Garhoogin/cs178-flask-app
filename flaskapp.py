@@ -53,7 +53,7 @@ def delete_user():
         return render_template('delete_user.html')
 
 
-@app.route('/display-users')
+@app.route('/users')
 def display_users():
 	# Query the database for the users
 	users_list = execute_query("""

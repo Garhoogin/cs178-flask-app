@@ -20,7 +20,7 @@
                 {% for user in users %}
                 <tr>
                     <td>{{ user['ID'] }}</td>
-                    <td>{{ user['Name'] }}</td>
+                    <td><a href="/user/{{ user['ID'] }}">{{ user['Name'] }}</a></td>
                     <td>{{ user['Count'] }}</td>
                 </tr>
                 {% endfor %}
