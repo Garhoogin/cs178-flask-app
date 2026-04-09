@@ -69,7 +69,7 @@ def display_hacks():
 	type_list = execute_query("""
 		SELECT DISTINCT Type FROM HACK
 	""")
-	type_list = [type['Type'] for type in types]
+	type_list = [type['Type'] for type in type_list]
 
 	# build the hack type dict
 	hacks = {}
