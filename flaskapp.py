@@ -69,11 +69,20 @@ def display_user(userid):
 		# Query the database
 		user_row = execute_query("""
 			SELECT CREATORS.Name AS Name
+			FROM   CREATORS
 			WHERE  CREATORS.ID=%d
+			LIMIT  1
+		""" % int(userid))
+
+		# Get hacks
+		hacks = execute_query("""
+			SELECT HACK.ID AS ID, HACK.Title AS Title, HACK.Type AS Type
+			FROM   HACK, HACK_AUTHOR
+			WHERE  HACK_AUTHOR.UserID=%d AND HACK_AUTHOR.HackID=HACK.ID
 		""" % int(userid))
 		
 		username = user_row[0]['Name']
-		return render_template('display_user.html', username=username, hacks=[])
+		return render_template('display_user.html', username=username, hacks=hacks)
 	except:
 		# Error display (db error, no user, bad user ID)
 		return render_template('display_user_error.html')

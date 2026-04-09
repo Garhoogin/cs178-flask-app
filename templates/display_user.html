@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="container">
-        <h2 class="mt-5">User {{ username }</h2>
+        <h2 class="mt-5">User {{ username }}</h2>
         <p>
           These are the hacks that {{ username }} is credited with:
         </p>
@@ -21,7 +21,7 @@
             <tbody>
                 {% for hack in hacks %}
                 <tr>
-                    <td><a href="#">{{ hack['Title'] }}</a></td>
+                    <td><a href="/hack/{{ hack['ID'] }}">{{ hack['Title'] }}</a></td>
                     <td>{{ hack['Type'] }}</td>
                 </tr>
                 {% endfor %}
