@@ -92,9 +92,9 @@ def display_hack(hackid):
 	try:
 		# Query the database
 		hack_row = execute_query("""
-			SELECT HACKS.Title AS Title
-			FROM   HACKS
-			WHERE  HACKS.ID=%d
+			SELECT HACK.Title AS Title
+			FROM   HACK
+			WHERE  HACK.ID=%d
 			LIMIT  1
 		""" % int(hackid))
 
@@ -106,7 +106,7 @@ def display_hack(hackid):
 		""" % int(hackid))
 		
 		hack_name = hack_row[0]['Title']
-		return render_template('display_user.html', hack_name=hack_name, users=users)
+		return render_template('display_hack.html', hack_name=hack_name, users=users)
 	except:
 		# Error display (db error, no user, bad user ID)
 		return render_template('display_user_error.html')
