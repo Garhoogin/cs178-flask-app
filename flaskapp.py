@@ -64,7 +64,7 @@ def display_users():
 	return render_template('display_users.html', users = users_list)
 
 @app.route('/user/<userid>')
-def display_hack(userid):
+def display_user(userid):
 	try:
 		# Query the database
 		user_row = execute_query("""
@@ -88,7 +88,7 @@ def display_hack(userid):
 		return render_template('display_user_error.html')
 
 @app.route('/hack/<hackid>')
-def display_user(hackid):
+def display_hack(hackid):
 	try:
 		# Query the database
 		hack_row = execute_query("""
@@ -96,14 +96,14 @@ def display_user(hackid):
 			FROM   HACKS
 			WHERE  HACKS.ID=%d
 			LIMIT  1
-		""" % int(userid))
+		""" % int(hackid))
 
 		# Get users
 		users = execute_query("""
 			SELECT CREATORS.ID AS ID, CREATORS.Name AS Name
 			FROM   CREATORS, HACK_AUTHOR
 			WHERE  HACK_AUTHOR.UserID=CREATORS.ID AND HACK_AUTHOR.HackID=%d
-		""" % int(userid))
+		""" % int(hackid))
 		
 		hack_name = hack_row[0]['Title']
 		return render_template('display_user.html', hack_name=hack_name, users=users)
