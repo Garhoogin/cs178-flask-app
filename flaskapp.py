@@ -80,6 +80,7 @@ def display_hacks():
 			FROM   HACK
 			WHERE  HACK.Type='%s'
 		""" % type)
+		hacks[type] = hack_list
 	return render_template('display_hacks.html', types=type_list, hacks=hacks)
 
 @app.route('/user/<userid>')
