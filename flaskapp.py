@@ -87,6 +87,30 @@ def display_user(userid):
 		# Error display (db error, no user, bad user ID)
 		return render_template('display_user_error.html')
 
+@app.route('/hack/<hackid>')
+def display_user(hackid):
+	try:
+		# Query the database
+		hack_row = execute_query("""
+			SELECT HACKS.Title AS Title
+			FROM   HACKS
+			WHERE  HACKS.ID=%d
+			LIMIT  1
+		""" % int(userid))
+
+		# Get users
+		users = execute_query("""
+			SELECT CREATORS.ID AS ID, CREATORS.Name AS Name
+			FROM   CREATORS, HACK_AUTHOR
+			WHERE  HACK_AUTHOR.UserID=CREATORS.ID AND HACK_AUTHOR.HackID=%d
+		""" % int(userid))
+		
+		hack_name = hack_row[0]['Title']
+		return render_template('display_user.html', hack_name=hack_name, users=users)
+	except:
+		# Error display (db error, no user, bad user ID)
+		return render_template('display_user_error.html')
+
 
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':

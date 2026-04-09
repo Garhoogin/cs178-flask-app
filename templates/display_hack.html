@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User {{ username }}</title>
+    <!-- Bootstrap CSS for styling the table -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-5">{{ hack_name }}</h2>
+        <p>
+          {{ hack_name }} is created by:
+        </p>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark"> <!-- creates a dark background for the table header -->
+                <tr>
+                    <th>Username</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td><a href="/hack/{{ user['ID'] }}">{{ user['Name'] }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+ </body>
+</html>
