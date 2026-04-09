@@ -63,6 +63,25 @@ def display_users():
 	""")
 	return render_template('display_users.html', users = users_list)
 
+@app.route('/hacks')
+def display_hacks():
+	# Get the list of hack types
+	type_list = execute_query("""
+		SELECT DISTINCT Type FROM HACK
+	""")
+	type_list = [type['Type'] for type in types]
+
+	# build the hack type dict
+	hacks = {}
+
+	for type in type_list:
+		hack_list = execute_query("""
+			SELECT HACK.ID AS ID, HACK.Title AS Title
+			FROM   HACK
+			WHERE  HACK.Type='%s'
+		""" % type)
+	return render_template('display_hacks.html', types=type_list, hacks=hacks)
+
 @app.route('/user/<userid>')
 def display_user(userid):
 	try:
