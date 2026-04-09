@@ -55,14 +55,28 @@ def delete_user():
 
 @app.route('/display-users')
 def display_users():
-    # hard code a value to the users_list;
-    # note that this could have been a result from an SQL query :) 
-    users_list = execute_query("""
-        SELECT CREATORS.ID AS ID, CREATORS.Name AS Name, COUNT(*) AS Count
-        FROM   CREATORS, HACK_AUTHOR
-        WHERE  CREATORS.ID=HACK_AUTHOR.UserID GROUP BY CREATORS.ID;
-    """)
-    return render_template('display_users.html', users = users_list)
+	# Query the database for the users
+	users_list = execute_query("""
+		SELECT CREATORS.ID AS ID, CREATORS.Name AS Name, COUNT(*) AS Count
+		FROM   CREATORS, HACK_AUTHOR
+		WHERE  CREATORS.ID=HACK_AUTHOR.UserID GROUP BY CREATORS.ID;
+	""")
+	return render_template('display_users.html', users = users_list)
+
+@app.route('/user')
+def display_user(userid):
+	# Query the database
+	user_row = execute_query("""
+		SELECT CREATORS.Name AS Name
+		WHERE  CREATORS.ID=%d
+	""" % userid)
+
+	# We'll check for errors
+	if len(user_row) > 0:
+		username = user_row[0]['Name']
+		return render_template('display_user.html', username=username, hacks=[])
+	else:
+		return render_template('display_user_error.html')
 
 
 # these two lines of code should always be the last in the file
