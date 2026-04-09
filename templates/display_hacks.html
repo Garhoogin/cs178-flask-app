@@ -20,7 +20,7 @@
                 {% for hack in hacks[hack_type] %}
                 <tr>
                     <td><a href="/hack/{{ hack['ID'] }}">{{ hack['Title'] }}</a></td>
-                    <td>{{ 0 }}</td>
+                    <td>{{ hack['Contributors'] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

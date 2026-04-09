@@ -76,9 +76,10 @@ def display_hacks():
 
 	for type in type_list:
 		hack_list = execute_query("""
-			SELECT HACK.ID AS ID, HACK.Title AS Title
-			FROM   HACK
-			WHERE  HACK.Type='%s'
+			SELECT   HACK.ID AS ID, HACK.Title AS Title, COUNT(*) AS Contributors
+			FROM     HACK, HACK_AUTHOR
+			WHERE    HACK.Type='%s' AND HACK.ID=HACK_AUTHOR.HackID
+			GROUP BY HACK.ID
 		""" % type)
 		hacks[type] = hack_list
 	return render_template('display_hacks.html', types=type_list, hacks=hacks)
