@@ -64,7 +64,7 @@ def display_users():
 	return render_template('display_users.html', users = users_list)
 
 @app.route('/user/<userid>')
-def display_user(userid):
+def display_hack(userid):
 	try:
 		# Query the database
 		user_row = execute_query("""
