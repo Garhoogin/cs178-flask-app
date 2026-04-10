@@ -51,7 +51,7 @@ def validate_username(username):
 @app.route('/delete-user',methods=['GET', 'POST'])
 def delete_user():
 	if request.method == 'POST':
-			# try:
+		try:
 			# Extract form data
 			username = request.form['username']
 	
@@ -59,7 +59,7 @@ def delete_user():
 				username = ''
 			
 			# lookup the user by name
-			user_row = execute_update_query("""
+			user_row = execute_query("""
 				SELECT ID
 				FROM   CREATORS
 				WHERE  Name='%s'
@@ -76,7 +76,7 @@ def delete_user():
 
 			# Delete all entries in the HACK_AUTHOR table that user appears in (lest we end up
 			# with dangling pointers)
-			execute_query("""
+			execute_update_query("""
 				DELETE
 				FROM   HACK_AUTHOR
 				WHERE  UserID=%d
@@ -84,12 +84,12 @@ def delete_user():
 			
 			# Show success status
 			flash('User %s deleted successfully.' % username, 'success') 
-			# except:
+		except:
 			# Some error occurred.
-			# flash('An error occurred.', 'error')
-			
-			# Redirect to home page or another page upon successful submission
-			return redirect(url_for('home'))
+			flash('An error occurred.', 'error')
+		
+		# Redirect to home page or another page upon successful submission
+		return redirect(url_for('home'))
 	else:
 		# Render the form page if the request method is GET
 		return render_template('delete_user.html')
