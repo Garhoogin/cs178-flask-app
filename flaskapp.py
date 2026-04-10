@@ -67,7 +67,7 @@ def add_user():
 			flash('User added successfully.', 'success')
 		except Exception as e:
 			# An error occurred.
-			flash('An error occurred: %s.' % str(e), 'error')
+			flash('An error occurred: %s' % str(e), 'error')
 		
 		# Redirect to home page
 		return redirect(url_for('home'))
