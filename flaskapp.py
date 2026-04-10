@@ -51,7 +51,7 @@ def validate_username(username):
 @app.route('/delete-user',methods=['GET', 'POST'])
 def delete_user():
 	if request.method == 'POST':
-		try:
+			# try:
 			# Extract form data
 			username = request.form['username']
 	
@@ -84,12 +84,12 @@ def delete_user():
 			
 			# Show success status
 			flash('User %s deleted successfully.' % username, 'success') 
-		except:
+			# except:
 			# Some error occurred.
-			flash('An error occurred.', 'error')
-		
-		# Redirect to home page or another page upon successful submission
-		return redirect(url_for('home'))
+			# flash('An error occurred.', 'error')
+			
+			# Redirect to home page or another page upon successful submission
+			return redirect(url_for('home'))
 	else:
 		# Render the form page if the request method is GET
 		return render_template('delete_user.html')
