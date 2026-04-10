@@ -1,14 +1,14 @@
-# [Your Project Name Here]
+# CS 178 Project - Mario Kart DS Hacks Database
 
 **CS178: Cloud and Database Systems — Project #1**
-**Author:** [Your Name]
-**GitHub:** [your-username]
+**Author:** Declan Moore
+**GitHub:** Garhoogin
 
 ---
 
 ## Overview
 
-<!-- Describe your project in 2-4 sentences. What does it do? Who is it for? What problem does it solve? -->
+This project creates a database of Mario Kart DS hacks. This is a simple browsable list of hacks and the people who are credited with their creation. It enables you to explore a list of hacks, and to see what other projects a person may have contributed to. 
 
 ---
 
@@ -16,8 +16,7 @@
 
 - **Flask** — Python web framework
 - **AWS EC2** — hosts the running Flask application
-- **AWS RDS (MySQL)** — relational database for [describe what you stored]
-- **AWS DynamoDB** — non-relational database for [describe what you stored]
+- **AWS RDS (MySQL)** — relational database for storing user and hack information
 - **GitHub Actions** — auto-deploys code from GitHub to EC2 on push
 
 ---
@@ -65,18 +64,6 @@ ProjectOne/
 
 ---
 
-## How to Access in the Cloud
-
-The app is deployed on an AWS EC2 instance. To view the live version:
-
-```
-http://[your-ec2-public-ip]:8080
-```
-
-_(Note: the EC2 instance may not be running after project submission.)_
-
----
-
 ## Credential Setup
 
 This project requires a `creds.py` file that is **not included in this repository** for security reasons.
@@ -101,10 +88,11 @@ db = "your-database-name"
 
 **Example:**
 
-- `[TableName]` — stores [description]; primary key is `[key]`
-- `[TableName]` — stores [description]; foreign key links to `[other table]`
+- `HACK` - stores hack names and types; primary key is `ID`.
+- `CREATOR` - stores creator names; primary key is `ID`.
+- `HACK_AUTHOR` - stores mappings of hacks to their authors. Foreign keys are `UserID` and `HackID`, which reference the `CREATOR` and `HACK` tables respectively by their `ID` column.
 
-The JOIN query used in this project: <!-- describe it in plain English -->
+SQL joins are used to get a list of hacks a user has contributed to, and to get a list of users who have contributed to a particular hack. 
 
 ### DynamoDB
 
@@ -135,4 +123,4 @@ The JOIN query used in this project: <!-- describe it in plain English -->
 
 ## AI Assistance
 
-<!-- List any AI tools you used (e.g., ChatGPT) and briefly describe what you used them for. Per course policy, AI use is allowed but must be cited in code comments and noted here. -->
+Organic intelligence only.
