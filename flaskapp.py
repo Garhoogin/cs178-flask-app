@@ -15,24 +15,6 @@ app.secret_key = 'your_secret_key' # this is an artifact for using flash display
 def home():
     return render_template('home.html')
 
-@app.route('/add-user', methods=['GET', 'POST'])
-def add_user():
-    if request.method == 'POST':
-        # Extract form data
-        fname = request.form['fname']
-        lname = request.form['lname']
-        genre = request.form['genre']
-        
-        # Process the data (e.g., add it to a database)
-        # For now, let's just print it to the console
-        print("Name:", fname, lname, ":", "Favorite Genre:", genre)
-        
-        flash('User added successfully! Huzzah!', 'success')  # 'success' is a category; makes a green banner at the top
-        # Redirect to home page or another page upon successful submission
-        return redirect(url_for('home'))
-    else:
-        # Render the form page if the request method is GET
-        return render_template('add_user.html')
 
 def validate_username(username):
 	# Username must not contain a forbidden character.
@@ -47,6 +29,51 @@ def validate_username(username):
 	
 	# All checks pass
 	return True
+
+@app.route('/add-user', methods=['GET', 'POST'])
+def add_user():
+	if request.method == 'POST':
+		try:
+			# Extract form data
+			username = request.form['username']
+
+			# First check: is username valid?
+			if not validate_username(username):
+				raise Exception('Username is invalid.')
+			
+			# Second check: does the username already exist?
+			user_row = execute_query("""
+				SELECT *
+				FROM   CREATORS
+				WHERE  Name='%s'
+			""" % username)
+			
+			if (len(user_row) != 0):
+				raise Exception('A user by that name already exists.')
+			
+			# Allocate a new user ID. TODO: do this more smartly.
+			max_id_row = execute_query("""
+				SELECT MAX(ID) AS ID
+				FROM   CREATORS
+			""")
+			new_id = max_id_row[0]['ID'] + 1
+
+			# Finally, add a user to the database.
+			
+			execute_update_query("""
+				INSERT INTO CREATORS VALUES (%d, '%s')
+			""" % (new_id, username))
+			
+			flash('User added successfully.', 'success')
+		except Exception as e:
+			# An error occurred.
+			flash('An error occurred: %s.' % str(e), 'error')
+		
+		# Redirect to home page
+		return redirect(url_for('home'))
+	else:
+		# Render the form page if the request method is GET
+		return render_template('add_user.html')
 
 @app.route('/delete-user',methods=['GET', 'POST'])
 def delete_user():
