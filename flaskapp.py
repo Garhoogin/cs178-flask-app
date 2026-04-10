@@ -59,7 +59,7 @@ def delete_user():
 				username = ''
 			
 			# lookup the user by name
-			user_row = execute_query("""
+			user_row = execute_update_query("""
 				SELECT ID
 				FROM   CREATORS
 				WHERE  Name='%s'
@@ -68,7 +68,7 @@ def delete_user():
 			user_id = user_row[0]['ID']
 			
 			# delete the user's entry from the CREATORS table.
-			execute_query("""
+			execute_update_query("""
 				DELETE
 				FROM   CREATORS
 				WHERE  ID=%d

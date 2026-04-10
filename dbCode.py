@@ -22,3 +22,11 @@ def execute_query(query, args=()):
     rows = cur.fetchall()
     cur.close()
     return rows
+
+def execute_update_query(query, args=()):
+	# Runs a query to update the database.
+	con = get_conn()
+	cur = con.cursor(pymysql.cursors.DictCursor)
+	cur.execute(query, args)
+	con.commit()
+	cur.close()
