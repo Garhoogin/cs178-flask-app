@@ -126,9 +126,10 @@ def delete_user():
 def display_users():
 	# Query the database for the users
 	users_list = execute_query("""
-		SELECT CREATORS.ID AS ID, CREATORS.Name AS Name, COUNT(*) AS Count
-		FROM   CREATORS, HACK_AUTHOR
-		WHERE  CREATORS.ID=HACK_AUTHOR.UserID GROUP BY CREATORS.ID;
+		SELECT    CREATORS.ID AS ID, CREATORS.Name AS Name, COUNT(HACK_AUTHOR.HackID) AS Count
+		FROM      CREATORS
+		LEFT JOIN HACK_AUTHOR ON HACK_AUTHOR.UserID=CREATORS.ID
+		GROUP BY  CREATORS.ID
 	""")
 	return render_template('display_users.html', users = users_list)
 
