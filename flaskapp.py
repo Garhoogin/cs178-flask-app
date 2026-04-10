@@ -76,7 +76,7 @@ def add_user():
 		return render_template('add_user.html')
 
 @app.route('/update-user', methods=['GET', 'POST'])
-def update_user:
+def update_user():
 	if request.method == 'POST':
 		try:
 			username = request.form['username']
