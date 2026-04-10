@@ -16,12 +16,14 @@ def get_conn():
     return conn
 
 def execute_query(query, args=()):
-    """Executes a SELECT query and returns all rows as dictionaries."""
-    cur = get_conn().cursor(pymysql.cursors.DictCursor)
-    cur.execute(query, args)
-    rows = cur.fetchall()
-    cur.close()
-    return rows
+	"""Executes a SELECT query and returns all rows as dictionaries."""
+	con = get_conn()
+	cur = con.cursor(pymysql.cursors.DictCursor)
+	cur.execute(query, args)
+	con.commit()
+	rows = cur.fetchall()
+	cur.close()
+	return rows
 
 def execute_update_query(query, args=()):
 	# Runs a query to update the database.
