@@ -75,6 +75,51 @@ def add_user():
 		# Render the form page if the request method is GET
 		return render_template('add_user.html')
 
+@app.route('/update-user', methods=['GET', 'POST'])
+def update_user:
+	if request.method == 'POST':
+		try:
+			username = request.form['username']
+			new_username = request.form['new_username']
+
+			# Validate both old and new username
+			if not validate_username(username):
+				raise Exception('A user by that name does not exist.')
+			if not validate_username(new_username):
+				raise Exception('The new username is incorrect.')
+
+			# Look up the old user
+			user_row = execute_query("""
+				SELECT *
+				FROM   CREATORS
+				WHERE  Name='%s'
+			""" % username)
+			if len(user_row) == 0:
+				raise Exception('A user by that name does not exist.')
+
+			# Look up the new user
+			new_user_row = execute_query("""
+				SELECT *
+				FROM   CREATORS
+				WHERE  Name='%s'
+			""" % new_username)
+			if len(new_user_row) > 0:
+				raise Exception('A user by that name already exists.')
+
+			# All checks pass, update the user.
+			# TODO
+			
+			flash('User name changed successfully.', 'success')
+		except Exception as e:
+			# An error occurred.
+			flash('An error occurred: %s' % str(e), 'error')
+
+		# Return home
+		return redirect(url_for('home'))
+	else:
+		# Render the form page
+		return render_template('update_user.html')
+
 @app.route('/delete-user',methods=['GET', 'POST'])
 def delete_user():
 	if request.method == 'POST':
