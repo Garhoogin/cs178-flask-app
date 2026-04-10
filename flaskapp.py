@@ -96,6 +96,7 @@ def update_user():
 			""" % username)
 			if len(user_row) == 0:
 				raise Exception('A user by that name does not exist.')
+			user_id = user_row[0]['ID']
 
 			# Look up the new user
 			new_user_row = execute_query("""
@@ -107,6 +108,11 @@ def update_user():
 				raise Exception('A user by that name already exists.')
 
 			# All checks pass, update the user.
+			execute_update_query("""
+				UPDATE CREATORS
+				SET    Name='%s'
+				WHERE  ID=%d
+			""" % (new_username, user_id))
 			# TODO
 			
 			flash('User name changed successfully.', 'success')
