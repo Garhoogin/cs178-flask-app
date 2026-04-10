@@ -55,7 +55,7 @@ def delete_user():
 			# Extract form data
 			username = request.form['username']
 	
-			if !validate_username(username):
+			if not validate_username(username):
 				username = ''
 			
 			# lookup the user by name
