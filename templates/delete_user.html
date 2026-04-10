@@ -5,11 +5,9 @@
   </head>
   <body>
     <h1>Delete User</h1>
-    <form action="{{ url_for('delete_user') }}" method="post">
-      <label for="fname">First Name:</label><br />
-      <input type="text" id="fname" name="fname" required /><br />
-      <label for="lname">Last Name:</label><br />
-      <input type="text" id="lname" name="lname" required /><br />
+    <form action="{{ url_for('delete_user') }}" method="POST">
+      <label for="username">Username:</label><br />
+      <input type="text" id="username" name="username" required /><br />
       <input type="submit" value="Submit" />
     </form>
   </body>

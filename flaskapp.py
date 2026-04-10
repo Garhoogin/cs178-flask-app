@@ -34,23 +34,65 @@ def add_user():
         # Render the form page if the request method is GET
         return render_template('add_user.html')
 
+def validate_username(username):
+	# Username must not contain a forbidden character.
+	forbidden = '<>{}\\\'\"'
+	for c in forbidden:
+		if c in username:
+			return False
+	
+	if len(username) == 0:
+		# Username must have nonzero length
+		return False
+	
+	# All checks pass
+	return True
+
 @app.route('/delete-user',methods=['GET', 'POST'])
 def delete_user():
-    if request.method == 'POST':
-        # Extract form data
-        fname = request.form['fname']
-        lname = request.form['lname']
-        
-        # Process the data (e.g., add it to a database)
-        # For now, let's just print it to the console
-        print("Name to delete:", fname, lname)
-        
-        flash('User deleted successfully! Hoorah!', 'warning') 
-        # Redirect to home page or another page upon successful submission
-        return redirect(url_for('home'))
-    else:
-        # Render the form page if the request method is GET
-        return render_template('delete_user.html')
+	if request.method == 'POST':
+		try:
+			# Extract form data
+			username = request.form['username']
+	
+			if !validate_username(username):
+				username = ''
+			
+			# lookup the user by name
+			user_row = execute_query("""
+				SELECT ID
+				FROM   CREATORS
+				WHERE  Name='%s'
+			""" % username)
+	
+			user_id = user_row[0]['ID']
+			
+			# delete the user's entry from the CREATORS table.
+			execute_query("""
+				DELETE
+				FROM   CREATORS
+				WHERE  ID=%d
+			""" % user_id)
+
+			# Delete all entries in the HACK_AUTHOR table that user appears in (lest we end up
+			# with dangling pointers)
+			execute_query("""
+				DELETE
+				FROM   HACK_AUTHOR
+				WHERE  UserID=%d
+			""" % user_id)
+			
+			# Show success status
+			flash('User %s deleted successfully.' % username, 'success') 
+		except:
+			# Some error occurred.
+			flash('An error occurred.', 'error')
+		
+		# Redirect to home page or another page upon successful submission
+		return redirect(url_for('home'))
+	else:
+		# Render the form page if the request method is GET
+		return render_template('delete_user.html')
 
 
 @app.route('/users')
