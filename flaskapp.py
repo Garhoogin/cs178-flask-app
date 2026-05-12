@@ -16,19 +16,6 @@ def home():
     return render_template('home.html')
 
 
-def validate_username(username):
-	# Username must not contain a forbidden character.
-	forbidden = '<>{}\\\'\"'
-	for c in forbidden:
-		if c in username:
-			return False
-	
-	if len(username) == 0:
-		# Username must have nonzero length
-		return False
-	
-	# All checks pass
-	return True
 
 @app.route('/add-user', methods=['GET', 'POST'])
 def add_user():
@@ -75,102 +62,6 @@ def add_user():
 		# Render the form page if the request method is GET
 		return render_template('add_user.html')
 
-@app.route('/update-user', methods=['GET', 'POST'])
-def update_user():
-	if request.method == 'POST':
-		try:
-			username = request.form['username']
-			new_username = request.form['new_username']
-
-			# Validate both old and new username
-			if not validate_username(username):
-				raise Exception('A user by that name does not exist.')
-			if not validate_username(new_username):
-				raise Exception('The new username is incorrect.')
-
-			# Look up the old user
-			user_row = execute_query("""
-				SELECT *
-				FROM   CREATORS
-				WHERE  Name='%s'
-			""" % username)
-			if len(user_row) == 0:
-				raise Exception('A user by that name does not exist.')
-			user_id = user_row[0]['ID']
-
-			# Look up the new user
-			new_user_row = execute_query("""
-				SELECT *
-				FROM   CREATORS
-				WHERE  Name='%s'
-			""" % new_username)
-			if len(new_user_row) > 0:
-				raise Exception('A user by that name already exists.')
-
-			# All checks pass, update the user.
-			execute_update_query("""
-				UPDATE CREATORS
-				SET    Name='%s'
-				WHERE  ID=%d
-			""" % (new_username, user_id))
-			# TODO
-			
-			flash('User name changed successfully.', 'success')
-		except Exception as e:
-			# An error occurred.
-			flash('An error occurred: %s' % str(e), 'error')
-
-		# Return home
-		return redirect(url_for('home'))
-	else:
-		# Render the form page
-		return render_template('update_user.html')
-
-@app.route('/delete-user',methods=['GET', 'POST'])
-def delete_user():
-	if request.method == 'POST':
-		try:
-			# Extract form data
-			username = request.form['username']
-	
-			if not validate_username(username):
-				username = ''
-			
-			# lookup the user by name
-			user_row = execute_query("""
-				SELECT ID
-				FROM   CREATORS
-				WHERE  Name='%s'
-			""" % username)
-	
-			user_id = user_row[0]['ID']
-			
-			# delete the user's entry from the CREATORS table.
-			execute_update_query("""
-				DELETE
-				FROM   CREATORS
-				WHERE  ID=%d
-			""" % user_id)
-
-			# Delete all entries in the HACK_AUTHOR table that user appears in (lest we end up
-			# with dangling pointers)
-			execute_update_query("""
-				DELETE
-				FROM   HACK_AUTHOR
-				WHERE  UserID=%d
-			""" % user_id)
-			
-			# Show success status
-			flash('User %s deleted successfully.' % username, 'success') 
-		except:
-			# Some error occurred.
-			flash('An error occurred.', 'error')
-		
-		# Redirect to home page or another page upon successful submission
-		return redirect(url_for('home'))
-	else:
-		# Render the form page if the request method is GET
-		return render_template('delete_user.html')
 
 
 @app.route('/users')
@@ -184,26 +75,6 @@ def display_users():
 	""")
 	return render_template('display_users.html', users = users_list)
 
-@app.route('/hacks')
-def display_hacks():
-	# Get the list of hack types
-	type_list = execute_query("""
-		SELECT DISTINCT Type FROM HACK
-	""")
-	type_list = [type['Type'] for type in type_list]
-
-	# build the hack type dict
-	hacks = {}
-
-	for type in type_list:
-		hack_list = execute_query("""
-			SELECT   HACK.ID AS ID, HACK.Title AS Title, COUNT(*) AS Contributors
-			FROM     HACK, HACK_AUTHOR
-			WHERE    HACK.Type='%s' AND HACK.ID=HACK_AUTHOR.HackID
-			GROUP BY HACK.ID
-		""" % type)
-		hacks[type] = hack_list
-	return render_template('display_hacks.html', types=type_list, hacks=hacks)
 
 @app.route('/user/<userid>')
 def display_user(userid):
@@ -229,29 +100,6 @@ def display_user(userid):
 		# Error display (db error, no user, bad user ID)
 		return render_template('display_user_error.html')
 
-@app.route('/hack/<hackid>')
-def display_hack(hackid):
-	try:
-		# Query the database
-		hack_row = execute_query("""
-			SELECT HACK.Title AS Title
-			FROM   HACK
-			WHERE  HACK.ID=%d
-			LIMIT  1
-		""" % int(hackid))
-
-		# Get users
-		users = execute_query("""
-			SELECT CREATORS.ID AS ID, CREATORS.Name AS Name
-			FROM   CREATORS, HACK_AUTHOR
-			WHERE  HACK_AUTHOR.UserID=CREATORS.ID AND HACK_AUTHOR.HackID=%d
-		""" % int(hackid))
-		
-		hack_name = hack_row[0]['Title']
-		return render_template('display_hack.html', hack_name=hack_name, users=users)
-	except:
-		# Error display (db error, no user, bad user ID)
-		return render_template('display_user_error.html')
 
 
 # these two lines of code should always be the last in the file

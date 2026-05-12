@@ -1,0 +1,20 @@
+Database FOUNTAIN:
+
++---------------------+
+| Table: FOUNTAIN     |
++---------------------+
+| ID       INTEGER    |
+| Lat      FLOAT      |
+| Lon      FLOAT      |
+| Exterior BOOLEAN    |
++---------------------+
+
++---------------------+
+| Table: RATING       |
++---------------------+
+| ID          INTEGER |
+| Overall     INTEGER |
+| Pressure    INTEGER |
+| Temperature INTEGER |
+| Taste       INTEGER |
++---------------------+
