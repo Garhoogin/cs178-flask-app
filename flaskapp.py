@@ -48,14 +48,31 @@ def format_rating(x):
 
 @app.route('/fountain/<id>')
 def display_fountain(id):
-	# TODO
-	lat=0
-	lon=0
-	num_ratings=0
-	overall=None
-	pressure=None
-	temperature=None
-	taste=None
+	ftn_info = execute_query("""
+		SELECT Lat, Lon
+		FROM   FOUNTAIN
+		WHERE  ID=%d
+		LIMIT  1
+	""" % int(id))[0]
+
+	lat=ftn_info['Lat']
+	lon=ftn_info['Lon']
+
+	ratings = execute_query("""
+		SELECT AVG(Overall)     AS Overall,
+		       AVG(Pressure)    AS Pressure,
+		       AVG(Temperature) AS Temperature,
+		       AVG(Taste)       AS Taste,
+		       COUNT(*)         AS Count
+		FROM   RATING
+		WHERE  Fountain=%d
+	""" % int(id))[0]
+
+	overall=ratings['Overall']
+	pressure=ratings['Pressure']
+	temperature=ratings['Temperature']
+	taste=ratings['Taste']
+	num_ratings=ratings['Count']
 
 	return render_template('display_fountain.html', id=id, lat=lat, lon=lon, num_ratings=num_ratings,
 		overall    =format_rating(overall),
