@@ -52,7 +52,7 @@ async function init() {
             title: text,
             gmpClickable: true,
         });
-        el.append(new PinElement({background: color}));
+        //el.append(new PinElement({background: color}));
         el.addEventListener("click", function(e) {
           window.location = '/fountain/' + pt.id;
         });
