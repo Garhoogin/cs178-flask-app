@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="container">
-        <h2 class="mt-5">Fountain at {{ f"{lat:.3f}" }}, {{ f"{lon:.3f}" }}</h2>
+        <h2 class="mt-5">Fountain at {{ {:.3f}.format(lat) }}, {{ {:.3f}.format(lon) }}</h2>
         <p>
           This fountain has {{ num_ratings }} ratings.
         </p>
