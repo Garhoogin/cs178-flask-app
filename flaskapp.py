@@ -42,6 +42,10 @@ def display_user(lat,lon):
 
 	return render_template('location.html', lat=lat, lon=lon, nearby=fountains)
 
+def format_rating(x):
+	if x is None: return 'N/A'
+	return x
+
 @app.route('/fountain/<id>')
 def display_fountain(id):
 	# TODO
@@ -54,7 +58,10 @@ def display_fountain(id):
 	taste=None
 
 	return render_template('display_fountain.html', id=id, lat=lat, lon=lon, num_ratings=num_ratings,
-		overall=overall, pressure=pressure, temperature=temperature, taste=taste)
+		overall    =format_rating(overall),
+		pressure   =format_rating(pressure),
+		temperature=format_rating(temperature),
+		taste      =format_rating(taste))
 
 
 
