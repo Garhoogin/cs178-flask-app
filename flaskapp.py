@@ -37,7 +37,7 @@ def display_user(lat,lon):
 			SELECT AVG(RATING.Overall) AS Rating
 			FROM   RATING
 			WHERE  RATING.Fountain=%d
-		""" % (row['ID']))['Rating']
+		""" % (row['ID']))[0]['Rating']
 		fountains.append(ftn)
 
 	return render_template('location.html', lat=lat, lon=lon, nearby=fountains)
