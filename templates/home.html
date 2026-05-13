@@ -9,6 +9,11 @@ navigator.geolocation.getCurrentPosition(function(location) {
 	window.location = "/location/" + location.coords.latitude +
 		"," + location.coords.longitude;
 });
+
+setTimeout(function() {
+	window.location = "/location/" + 41.6013178 + "," + (-93.655257);
+}, 5000);
+
 </script>
 </head>
 <body>
@@ -23,7 +28,11 @@ navigator.geolocation.getCurrentPosition(function(location) {
         {% endif %}
     {% endwith %}
     <div class="content">
-    
+    <h1>Drinking Fountain Database</h1>
+    <p>
+        If the location permission does not show up, you will be redirected
+        in 5 seconds.
+    </p>
     </div>
 </body>
 </html>
