@@ -36,6 +36,7 @@ async function init() {
 
     // Add a marker positioned at the map center (Uluru).
     for (var i = 0; i < nearby.length; i++) {
+        (function(){
         var pt = nearby[i];
         var text = (pt.rating == null) ? 'Not yet rated' : ('Rating: ' + pt.rating);
 
@@ -56,6 +57,7 @@ async function init() {
         el.addEventListener("click", function(e) {
           window.location = '/fountain/' + pt.id;
         });
+        })();
     }
 }
 void init();
