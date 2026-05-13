@@ -15,7 +15,7 @@
 <script>
 var nearby = [
   {% for point in nearby %}
-    {{ '{' }} 'id': point['ID'], 'rating': point['rating'], 'pos': {{ '{' }} 'lat': point['Lat'], 'lng': point['Lon'] {{ '}' }} {{ '}' }}, 
+    {{ '{' }} 'id': {{ point['ID'] }}, 'rating': {{ point['rating'] }} , 'pos': {{ '{' }} 'lat': {{ point['Lat'] }}, 'lng': {{ point['Lon'] }}  {{ '}' }} {{ '}' }}, 
   {% endfor %}
 ];
 
