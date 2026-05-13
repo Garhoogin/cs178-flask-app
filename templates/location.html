@@ -14,7 +14,9 @@
 </script>
 <script>
 var nearby = [
-  { 'id': 0, 'rating': 5, 'pos': { 'lat': 41.601, 'lng': -93.655 } }
+  {% for point in nearby %}
+    {{ '{' }} 'id': point['ID'], 'rating': point['rating'], 'pos': {{ '{' }} 'lat': point['Lat'], 'lng': point['Lon'] {{ '}' }} {{ '}' }}, 
+  {% endfor %}
 ];
 
 async function init() {
