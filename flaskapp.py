@@ -17,19 +17,6 @@ def home():
 
 
 
-
-@app.route('/users')
-def display_users():
-	# Query the database for the users
-	users_list = execute_query("""
-		SELECT    CREATORS.ID AS ID, CREATORS.Name AS Name, COUNT(HACK_AUTHOR.HackID) AS Count
-		FROM      CREATORS
-		LEFT JOIN HACK_AUTHOR ON HACK_AUTHOR.UserID=CREATORS.ID
-		GROUP BY  CREATORS.ID
-	""")
-	return render_template('display_users.html', users = users_list)
-
-
 @app.route('/location/<lat>,<lon>')
 def display_user(lat,lon):
 	# Query the database
@@ -39,7 +26,16 @@ def display_user(lat,lon):
 		FROM   FOUNTAIN
 		WHERE  (FOUNTAIN.Lat-(%f))*(FOUNTAIN.Lat-(%f))+(FOUNTAIN.Lon-(%f))*(FOUNTAIN.Lon-(%f)) < %f
 	""" % (float(lat), float(lat), float(lon), float(lon), float(radius*radius)))
-	return render_template('location.html', lat=lat, lon=lon, nearby=[])
+
+	fountains = []
+	for row in rows:
+		ftn = {}
+		ftn['ID'] = row['ID']
+		ftn['Lat'] = row['Lat']
+		ftn['Lon'] = row['Lon']
+		ftn['rating'] = 5 # TODO
+
+	return render_template('location.html', lat=lat, lon=lon, nearby=fountains)
 
 
 
