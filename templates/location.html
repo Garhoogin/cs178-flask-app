@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Drinking Fountains Database</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script>
+  (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+    key: "AIzaSyAmfZyup5E72pD4L-jzwWPEv8AzNXMrDko",
+    v: "weekly",
+    // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+    // Add other bootstrap parameters as needed, using camel case.
+  });
+</script>
+<script>
+var nearby = [
+  { 'id': 0, 'rating': 5, 'pos': { 'lat': 41.601, 'lng': -93.655 } }
+];
+
+async function init() {
+    // Request the needed libraries.
+    const [{ AdvancedMarkerElement }] = await Promise.all([
+        google.maps.importLibrary('marker'),
+        google.maps.importLibrary('maps'),
+    ]);
+    // Get the gmp-map element.
+    const mapElement = document.querySelector('gmp-map');
+
+    // Get the inner map.
+    const innerMap = mapElement.innerMap;
+
+    // Set map options.
+    innerMap.setOptions({
+        mapTypeControl: false,
+    });
+
+    // Add a marker positioned at the map center (Uluru).
+    for (var i = 0; i < nearby.length; i++) {
+        var pt = nearby[i];
+        var el = new AdvancedMarkerElement({
+            map: innerMap,
+            position: pt.pos,
+            title: 'Rating: ' + pt.rating,
+            gmpClickable: true
+        });
+        el.addEventListener("click", function(e) {
+          window.location = 'fountain/' + pt.id;
+        });
+    }
+}
+void init();
+</script>
+  <style>
+    gmp-map {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    html, body {
+        height: 100%;
+    }
+  </style>
+</head>
+<body>
+    <!-- display a flash message here, if necessary -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+  <gmp-map center="41.601,-93.655" zoom="19" map-id="DEMO_MAP_ID">
+  </gmp-map>
+</body>
+</html>
+

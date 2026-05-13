@@ -17,52 +17,6 @@ def home():
 
 
 
-@app.route('/add-user', methods=['GET', 'POST'])
-def add_user():
-	if request.method == 'POST':
-		try:
-			# Extract form data
-			username = request.form['username']
-
-			# First check: is username valid?
-			if not validate_username(username):
-				raise Exception('Username is invalid.')
-			
-			# Second check: does the username already exist?
-			user_row = execute_query("""
-				SELECT *
-				FROM   CREATORS
-				WHERE  Name='%s'
-			""" % username)
-			
-			if (len(user_row) != 0):
-				raise Exception('A user by that name already exists.')
-			
-			# Allocate a new user ID. TODO: do this more smartly.
-			max_id_row = execute_query("""
-				SELECT MAX(ID) AS ID
-				FROM   CREATORS
-			""")
-			new_id = max_id_row[0]['ID'] + 1
-
-			# Finally, add a user to the database.
-			
-			execute_update_query("""
-				INSERT INTO CREATORS VALUES (%d, '%s')
-			""" % (new_id, username))
-			
-			flash('User added successfully.', 'success')
-		except Exception as e:
-			# An error occurred.
-			flash('An error occurred: %s' % str(e), 'error')
-		
-		# Redirect to home page
-		return redirect(url_for('home'))
-	else:
-		# Render the form page if the request method is GET
-		return render_template('add_user.html')
-
-
 
 @app.route('/users')
 def display_users():
@@ -76,29 +30,16 @@ def display_users():
 	return render_template('display_users.html', users = users_list)
 
 
-@app.route('/user/<userid>')
-def display_user(userid):
-	try:
-		# Query the database
-		user_row = execute_query("""
-			SELECT CREATORS.Name AS Name
-			FROM   CREATORS
-			WHERE  CREATORS.ID=%d
-			LIMIT  1
-		""" % int(userid))
-
-		# Get hacks
-		hacks = execute_query("""
-			SELECT HACK.ID AS ID, HACK.Title AS Title, HACK.Type AS Type
-			FROM   HACK, HACK_AUTHOR
-			WHERE  HACK_AUTHOR.UserID=%d AND HACK_AUTHOR.HackID=HACK.ID
-		""" % int(userid))
-		
-		username = user_row[0]['Name']
-		return render_template('display_user.html', username=username, hacks=hacks)
-	except:
-		# Error display (db error, no user, bad user ID)
-		return render_template('display_user_error.html')
+@app.route('/location/<lat>,<lon>')
+def display_user(lat,lon):
+	# Query the database
+	radius=.0145*3 # ~~ 3 mile
+	rows = execute_query("""
+		SELECT FOUNTAIN.ID, FOUNTAIN.Lat, FOUNTAIN.Lon
+		FROM   FOUNTAIN
+		WHERE  (FOUNTAIN.Lat-%f)*(FOUNTAIN.Lat-%f)+(FOUNTAIN.Lon-%f)*(FOUNTAIN.Lon-%f) < %f
+	""" % float(lat), float(lat), float(lon), float(lon), float(radius))
+	return render_template('location.html', lat=lat, lon=lon, nearby=[])
 
 
 
