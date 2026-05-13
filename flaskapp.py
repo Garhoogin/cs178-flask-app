@@ -34,7 +34,7 @@ def display_user(lat,lon):
 		ftn['Lat'] = row['Lat']
 		ftn['Lon'] = row['Lon']
 		ftn['rating'] = execute_query("""
-			SELECT MEAN(RATING.Overall) AS Rating
+			SELECT AVG(RATING.Overall) AS Rating
 			FROM   RATING
 			WHERE  RATING.Fountain=%d
 		""" % (row['ID']))['Rating']
