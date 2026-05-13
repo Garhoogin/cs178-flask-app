@@ -33,7 +33,11 @@ def display_user(lat,lon):
 		ftn['ID'] = row['ID']
 		ftn['Lat'] = row['Lat']
 		ftn['Lon'] = row['Lon']
-		ftn['rating'] = 5 # TODO
+		ftn['rating'] = execute_query("""
+			SELECT MEAN(RATING.Overall) AS Rating
+			FROM   RATING
+			WHERE  RATING.Fountain=%d
+		""" % (row['ID']))['Rating']
 		fountains.append(ftn)
 
 	return render_template('location.html', lat=lat, lon=lon, nearby=fountains)

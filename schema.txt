@@ -13,8 +13,10 @@ Database FOUNTAIN:
 | Table: RATING       |
 +---------------------+
 | ID          INTEGER |
+| Fountain    INTEGER |
 | Overall     INTEGER |
 | Pressure    INTEGER |
 | Temperature INTEGER |
 | Taste       INTEGER |
 +---------------------+
+
