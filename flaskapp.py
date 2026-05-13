@@ -38,7 +38,7 @@ def display_user(lat,lon):
 		SELECT FOUNTAIN.ID, FOUNTAIN.Lat, FOUNTAIN.Lon
 		FROM   FOUNTAIN
 		WHERE  (FOUNTAIN.Lat-%f)*(FOUNTAIN.Lat-%f)+(FOUNTAIN.Lon-%f)*(FOUNTAIN.Lon-%f) < %f
-	""" % float(lat), float(lat), float(lon), float(lon), float(radius))
+	""" % (float(lat), float(lat), float(lon), float(lon), float(radius)))
 	return render_template('location.html', lat=lat, lon=lon, nearby=[])
 
 
