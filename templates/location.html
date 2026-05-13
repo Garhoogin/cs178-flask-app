@@ -37,12 +37,22 @@ async function init() {
     // Add a marker positioned at the map center (Uluru).
     for (var i = 0; i < nearby.length; i++) {
         var pt = nearby[i];
+        var text = (pt.rating == null) ? 'Not yet rated' : ('Rating: ' + pt.rating);
+
+        var color = '#c0c0c0';
+        if (pt.rating != null) {
+          if (pt.rating == 3) color = '#cf7f00';
+          if (pt.rating  < 3) color = '#c00000';
+          if (pt.rating  > 3) color = '#00c000';
+        }
+
         var el = new AdvancedMarkerElement({
             map: innerMap,
             position: pt.pos,
-            title: 'Rating: ' + pt.rating,
-            gmpClickable: true
+            title: text,
+            gmpClickable: true,
         });
+        el.append(new PinElement({background: color}));
         el.addEventListener("click", function(e) {
           window.location = '/fountain/' + pt.id;
         });
