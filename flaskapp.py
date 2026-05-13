@@ -34,6 +34,7 @@ def display_user(lat,lon):
 		ftn['Lat'] = row['Lat']
 		ftn['Lon'] = row['Lon']
 		ftn['rating'] = 5 # TODO
+		fountains.append(ftn)
 
 	return render_template('location.html', lat=lat, lon=lon, nearby=fountains)
 
